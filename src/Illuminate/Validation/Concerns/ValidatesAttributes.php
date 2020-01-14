@@ -1750,27 +1750,9 @@ trait ValidatesAttributes
      */
     public function validateDomainName($attribute, $value)
     {
-        if (! is_string($value)) {
-            return false;
-        }
-
-        if (strlen($value) > 254) {
-            return false;
-        }
-
-        $labels = explode(".", $value);
-        if (count($labels) < 2) {
-            return false;
-        }
-
         // ToDo get TLDs from https://data.iana.org/TLD/tlds-alpha-by-domain.txt and compare first label with them
-        foreach ($labels as $label) {
-            if (! preg_match("/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9]|)$/D", $label)) {
-                return false;
-            }
-        }
-
-        return true;
+        return strpos($value,'.') !== false
+            && filter_var($value, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) !== false;
     }
 
     /**
